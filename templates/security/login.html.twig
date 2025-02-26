@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h2>Connexion</h2>
+    
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    
+    <form method="post">
+        <label>Email :</label>
+        <input type="email" name="email" required>
+    
+        <label>Mot de passe :</label>
+        <input type="password" name="password" required>
+
+        {# Champ CSRF pour sécuriser le formulaire #}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+
+    <p>Pas encore de compte ? <a href="{{ path('app_registration') }}">S'inscrire</a></p>
+</div>
+{% endblock %}
