@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -35,6 +38,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
+
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'users')]
+    private Collection $posts;
+ 
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
+
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function setPosts(?Post $post): self
+    {
+        $this->posts = $post;
+        return $this;
+    }
 
     public function getId(): ?int
     {
